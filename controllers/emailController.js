@@ -1,11 +1,15 @@
 const { confirmEmailService } = require('../services/emailService');
+const jwt = require('jsonwebtoken');
 
 const confirmEmailController = async (req, res) => {
-    const { id } = req.query;
-    console.log(id);
+    const { token } = req.query;
+    console.log(token);
 
     try{
-        const confirmedEmail = await confirmEmailService(id);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id
+        
+        const confirmedEmail = await confirmEmailService(userId);
         return res.status(200).json({message: 'email confirmed successfully', email: confirmedEmail});
     }
     catch(err){

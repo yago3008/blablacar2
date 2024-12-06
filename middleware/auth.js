@@ -17,4 +17,17 @@ const authenticateToken = (req, res, next) => {
     }
 };
 
-module.exports = { authenticateToken };
+const generateToken = (userId) => {
+    const payload = {
+        id: userId,
+    };
+
+    return jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRES_IN,
+    });
+};
+
+module.exports = { 
+    authenticateToken,
+    generateToken,
+};
