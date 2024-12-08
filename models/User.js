@@ -7,10 +7,9 @@ const User = sequelize.define('User', {
         primaryKey: true,
         autoIncrement: true
     },
-    username: {
+    fullname: {
         type: DataTypes.STRING(50),
         allowNull: false,
-        unique: true
     },
     password: {
         type: DataTypes.STRING(100),
@@ -19,7 +18,6 @@ const User = sequelize.define('User', {
     email: {
         type: DataTypes.STRING(100),
         allowNull: false,
-        unique: true,
     },
     role: {
         type: DataTypes.ENUM('admin', 'user'),
@@ -28,6 +26,10 @@ const User = sequelize.define('User', {
     emailConfirmed: {
         type: DataTypes.BOOLEAN,
         defaultValue: false 
+    },
+    verificationToken: {
+        type: DataTypes.STRING(500),
+        defaultValue: false
     },
 }, {
     tableName: 'users',

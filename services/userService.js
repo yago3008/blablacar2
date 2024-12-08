@@ -3,34 +3,32 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const { sendEmailService } = require('./emailService')
+const { generateTokenService } = require('../middleware/auth');
 
+const registerUserService = async (fullname, password, email) => {
+    const userExist = await User.findOne({ where: { email } })
 
-const registerUserService = async (username, password, email) => {
-    const userExists = await User.findOne({ where: { username } })
-    const emailExists = await User.findOne({ where: { email } })
-
-    if (userExists) {
+    if (userExist && userExist.emailConfirmed) {
         throw new Error('Username already exists');
     }
-    if (emailExists) {
-        throw new Error('Email already exists');
-    }
 
-    
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
+    const user = await User.create({ fullname, password: hashedPassword, email: email });
+    const token = generateTokenService(user.id, user.role);
+    await user.update({ verificationToken: token });
 
-    await User.create({ username, password: hashedPassword, email: email });
-    const user = await User.findOne({ where: { username } })
-    sendEmailService(email, user.id);
+    sendEmailService(user);
 };
 
-const loginUserService = async (username, password) =>{
-    const user = await User.findOne({ where: { username } });
+const loginUserService = async (email, password) =>{
+    const user = await User.findOne({ where: { email } });
+
     if (!user){
         throw new Error('User not found');
     }
     const isMatch = await bcrypt.compare(password, user.password);
+
     if (!isMatch){
         throw new Error('Invalid credentials');
     }
@@ -56,11 +54,7 @@ const hashPassword = async (newPassword) => {
 
 };
 
-const generateTokenService = (userId, userRole)  => {
-    return jwt.sign({ id: userId, role: userRole }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_IN
-    });
-};
+
 
 module.exports = {
     registerUserService,

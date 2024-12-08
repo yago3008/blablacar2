@@ -2,8 +2,8 @@ const nodemailer = require('nodemailer');
 const User = require('../models/User');
 const { generateToken } = require('../middleware/auth');
 
-const sendEmailService = async (email, id) => {
-    const token = generateToken(id)
+const sendEmailService = async (user) => {
+    const token = generateTokenService(user.id, user.role)
 
     const transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -15,7 +15,7 @@ const sendEmailService = async (email, id) => {
 
     const mailOptions = {
         from: 'eulastones@gmail.com',
-        to: email,
+        to: user.email,
         subject: 'Email Confirmation',
         html: `<p>Confirm email, <a href='http://localhost:3000/user/confirm-email?id=${token}'>Click here</a> to confirm.</p>`,
     };

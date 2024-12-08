@@ -18,10 +18,10 @@ const createAdmin = async () => {
     if (!adminExists) {
         try {
             const user = await User.create({
-                username: 'admin',
+                fullname: 'admin',
                 password: await hashPassword('admin'),
                 role: 'admin',
-                emailconfirmed: true,
+                emailConfirmed: true,
                 email: 'admin@blablacar2.com',
             });
         } catch (err) {

@@ -17,17 +17,13 @@ const authenticateToken = (req, res, next) => {
     }
 };
 
-const generateToken = (userId) => {
-    const payload = {
-        id: userId,
-    };
-
-    return jwt.sign(payload, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_IN,
+const generateTokenService = (userId, userRole)  => {
+    return jwt.sign({ id: userId, role: userRole }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRES_IN
     });
 };
 
 module.exports = { 
     authenticateToken,
-    generateToken,
+    generateTokenService,
 };
