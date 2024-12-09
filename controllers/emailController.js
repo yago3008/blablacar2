@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 
 const confirmEmailController = async (req, res) => {
     const { token } = req.query;
-    console.log(token);
 
     try{
         const decoded = jwt.verify(token, process.env.JWT_SECRET);

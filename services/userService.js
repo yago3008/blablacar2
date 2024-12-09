@@ -9,7 +9,7 @@ const registerUserService = async (fullname, password, email) => {
     const userExist = await User.findOne({ where: { email } })
 
     if (userExist && userExist.emailConfirmed) {
-        throw new Error('Username already exists');
+        throw new Error('Email already registered');
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -18,7 +18,7 @@ const registerUserService = async (fullname, password, email) => {
     const token = generateTokenService(user.id, user.role);
     await user.update({ verificationToken: token });
 
-    sendEmailService(user);
+    sendEmailService(user, 'confirmEmail');
 };
 
 const loginUserService = async (email, password) =>{
@@ -38,14 +38,6 @@ const loginUserService = async (email, password) =>{
     return { user, token };
 };
 
-const confirmEmailService = async (id) => {
-    const user = await User.findOne({ where: { id } });
-    if (!user) {
-        throw new Error('Invalid id');
-    }
-    user.emailConfirmed = true;
-    await user.save();
-};
 
 const hashPassword = async (newPassword) => {
     const salt = await bcrypt.genSalt(10);
@@ -60,5 +52,4 @@ module.exports = {
     registerUserService,
     loginUserService,
     hashPassword,
-    confirmEmailService,
 }

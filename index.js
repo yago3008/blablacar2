@@ -6,6 +6,7 @@ const userRoute = require('./routes/userRoute');
 const cors = require('cors');
 const cron = require('node-cron');
 const { removeExpiredUsers } = require('./services/handlerService');
+require('dotenv').config();
 
 app
     .use(cors({origin: '*'}))
@@ -14,7 +15,7 @@ app
 syncDatabase();
 cron.schedule('0 0 * * *', () => {
   removeExpiredUsers();
-  console.log("Job de limpeza de usuários executado.");
+  console.log("Remove Users JOB Executed.");
 });
 app.listen(3000, () => {
     console.log('Server runnin on http://localhost:3000');

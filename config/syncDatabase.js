@@ -2,6 +2,7 @@ const { sequelize } = require('./database');
 const { User } = require('../models/app');
 const { hashPassword } = require('../services/userService');
 const ATT_DATABASE = false;
+const { generateTokenService } = require('../middleware/auth');
 
 const syncDatabase = async () => {
     try {
@@ -23,6 +24,7 @@ const createAdmin = async () => {
                 role: 'admin',
                 emailConfirmed: true,
                 email: 'admin@blablacar2.com',
+                verificationToken: generateTokenService(1, 'admin')
             });
         } catch (err) {
             console.error('Error creating admin user:', err);
