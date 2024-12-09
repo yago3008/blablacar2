@@ -1,4 +1,4 @@
-const { registerUserService, loginUserService } = require('../services/userService');
+const { registerUserService, loginUserService, forgotPasswordService } = require('../services/userService');
 const User = require('../models/User');
 
 const registerUserController = async (req, res) => {
@@ -28,9 +28,34 @@ const loginController = async (req, res) => {
     }
 };
 
+const forgotPasswordController = async (req, res) => {
+    console.log(req.user)
+    if(req.user.id){
+        const { newPassword, currentPassword } = req.body;
+        try{
+            user = await forgotPasswordService(req.user.id, newPassword, currentPassword, email = false);
+            return res.status(200).json({ message: 'password reseted:', user });
+        } catch(err){
+            return res.status(401).json({ error: err.message });
+        };
+    }
+    try{
+        const { email } = req.body;
+        user = await forgotPasswordService(req.user.id = false, newPassword = false, currentPassword = false, email);
+        return res.status(200).json({ message: 'password reset link sent to your email' });
+    }   catch(err){
+        return res.status(401).json({ error: err.message });
+    };
+    
+};
 
+const changePasswordController = async (req, res) => {
+
+};
 
 module.exports = {
     registerUserController,
     loginController,
+    forgotPasswordController,
+    changePasswordController,
 };

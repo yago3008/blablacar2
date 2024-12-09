@@ -1,6 +1,6 @@
 const { sequelize } = require('./database');
 const { User } = require('../models/app');
-const { hashPassword } = require('../services/userService');
+const { hashPassword } = require('../middleware/auth');
 const ATT_DATABASE = false;
 const { generateTokenService } = require('../middleware/auth');
 

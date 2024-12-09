@@ -39,17 +39,42 @@ const loginUserService = async (email, password) =>{
 };
 
 
-const hashPassword = async (newPassword) => {
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(newPassword, salt);
-    return hashedPassword
+const forgotPasswordService = async (userID, newPassword, currentPassword, email) => {
+
+    if(userID){
+        const user = await User.findOne({ where: {id: userID}});
+
+        if(!user){
+            throw new Error('User not found');
+        }
+
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+
+        if(!isMatch){
+            throw new Error('Invalid current password');
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, bcrypt.genSalt(10));
+        await user.update({ password: hashedPassword });
+        user.password = '';
+
+        return user;
+    }
+
+    user = User.findOne({ where: {email} });
+
+    if(!user){
+        throw new Error('User not found');
+    }
+
+    sendEmailService(user, 'forgotPassword')
 
 };
-
-
 
 module.exports = {
     registerUserService,
     loginUserService,
-    hashPassword,
+    forgotPasswordService,
+
 }
