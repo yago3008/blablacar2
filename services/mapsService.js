@@ -17,20 +17,33 @@ const mapsService = async (origin, destination) => {
 };
 
 const calculatePriceService = async (rawDistance, rawDuration) => {
-    let distance = rawDistance;
-    const [hoursPart, minutesPart] = rawDuration.split(" ");
+    let distance = parseFloat(rawDistance);
 
-    const hours = parseInt(hoursPart);
-    const minutes = parseInt(minutesPart);
-    const duration = hours + minutes;
+    const hoursParts = rawDuration.split(" ");
+    let hours = 0;
+    let minutes = 0;
 
-    const distanceTax =  0.50;
-    const durationTax = 0.10;
+    if (hoursParts[1] === "hours") {
+        hours = parseInt(hoursParts[0]);
+        if (hoursParts[2] === "mins") {
+            minutes = parseInt(hoursParts[2]);
+        }
+    } else if (hoursParts[1] === "mins") {
+        minutes = parseInt(hoursParts[0]);
+    } else {
+        throw new Error("Bad format for duration");
+    }
 
-    totalPrice = (distance * distanceTax) + (duration * durationTax)
+    const duration = (hours * 60 + minutes) / 60;
+
+    const distanceTax = 0.20;
+    const durationTax = 2.50;
+
+    const totalPrice = (distance * distanceTax) + (duration * durationTax);
+
     const addTax = totalPrice + (totalPrice / 100) * 5;
 
-    return addTax;
+    return parseFloat(addTax.toFixed(2));
 };
 
 module.exports = {
