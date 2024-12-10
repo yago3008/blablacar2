@@ -3,6 +3,7 @@ const syncDatabase = require('./config/syncDatabase');
 const app = express();
 app.use(express.json());
 const userRoute = require('./routes/userRoute');
+const mapsRoute = require('./routes/mapsRoute');
 const cors = require('cors');
 const cron = require('node-cron');
 const { removeExpiredUsers } = require('./services/handlerService');
@@ -10,7 +11,8 @@ require('dotenv').config();
 
 app
     .use(cors({origin: '*'}))
-    .use('/user', userRoute);
+    .use('/user', userRoute)
+    .use('/maps', mapsRoute);
     
 syncDatabase();
 cron.schedule('0 0 * * *', () => {
