@@ -45,7 +45,7 @@ const sendEmailService = async (user, key) => {
     }
 };
 
-const confirmEmailService = async (id) => {
+const confirmTokenService = async (id) => {
     const user = await User.findByPk(id)
     
     if (!user) {
@@ -58,5 +58,5 @@ const confirmEmailService = async (id) => {
 
 module.exports = {
     sendEmailService,
-    confirmEmailService
+    confirmTokenService
 };

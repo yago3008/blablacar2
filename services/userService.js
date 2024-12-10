@@ -39,36 +39,53 @@ const loginUserService = async (email, password) =>{
 };
 
 
-const forgotPasswordService = async (userID, newPassword, currentPassword, email) => {
+const forgotPasswordService = async (email, method, token, password) => {
 
-    if(userID){
-        const user = await User.findOne({ where: {id: userID}});
+    if (method === 'POST'){
+        const user = await User.findOne({ where: { email } });
+        if(!user){
+            throw new Error('User not found');
+        }
+        sendEmailService(user, 'forgotPassword');
+    };
+
+    if (method === 'GET'){
+        decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findByPk(decodedToken.id);
 
         if(!user){
             throw new Error('User not found');
         }
 
-        const isMatch = await bcrypt.compare(currentPassword, user.password);
-
-        if(!isMatch){
-            throw new Error('Invalid current password');
-        }
-
         const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(newPassword, bcrypt.genSalt(10));
+        const hashedPassword = await bcrypt.hash(password, salt);
+
         await user.update({ password: hashedPassword });
         user.password = '';
-
         return user;
-    }
+    };
+ 
+};
 
-    user = User.findOne({ where: {email} });
+const changePasswordService = async (userID, currentPassword, newPassword) => {
+    const user = await User.findByPk(userID);
 
     if(!user){
         throw new Error('User not found');
     }
 
-    sendEmailService(user, 'forgotPassword')
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+
+    if(!isMatch){
+        throw new Error('Invalid current password');
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    
+    await user.update({ password: hashedPassword });
+    user.password = '';
+    return user;
 
 };
 
@@ -76,5 +93,5 @@ module.exports = {
     registerUserService,
     loginUserService,
     forgotPasswordService,
-
+    changePasswordService
 }
