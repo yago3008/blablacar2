@@ -12,7 +12,7 @@ require('dotenv').config();
 app
     .use(cors({origin: '*'}))
     .use('/user', userRoute)
-    .use('/maps', mapsRoute);
+    .use('/api/v1/maps', mapsRoute);
     
 syncDatabase();
 cron.schedule('0 0 * * *', () => {
