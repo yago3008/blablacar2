@@ -2,10 +2,10 @@ const { registerUserService, loginUserService, forgotPasswordService, changePass
 const User = require('../models/User');
 
 const registerUserController = async (req, res) => {
-    const { fullname, password, email } = req.body;
+    const { fullname, password, email, birth } = req.body;
 
     try {
-        const newUser = await registerUserService(fullname, password, email);
+        const newUser = await registerUserService(fullname, password, email, birth);
         return res.status(200).json({message: 'user registered successfully, please confirm your email', user: newUser});
     } catch (err) {
         return res.status(401).json({error: err.message});

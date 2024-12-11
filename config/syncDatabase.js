@@ -3,7 +3,6 @@ const { User } = require('../models/app');
 const { hashPassword } = require('../middleware/auth');
 const ATT_DATABASE = false;
 const { generateTokenService } = require('../middleware/auth');
-const bcrypt = require('bcrypt');
 
 const syncDatabase = async () => {
     try {
@@ -25,7 +24,8 @@ const createAdmin = async () => {
                 role: 'admin',
                 emailConfirmed: true,
                 email: 'admin@blablacar2.com',
-                verificationToken: generateTokenService(1, 'admin')
+                verificationToken: generateTokenService(1, 'admin'),
+                birth: "1985-05-15"
             });
         } catch (err) {
             console.error('Error creating admin user:', err);

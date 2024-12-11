@@ -5,7 +5,7 @@ require('dotenv').config();
 const { sendEmailService } = require('./emailService')
 const { generateTokenService } = require('../middleware/auth');
 
-const registerUserService = async (fullname, password, email) => {
+const registerUserService = async (fullname, password, email, birth) => {
     const userExist = await User.findOne({ where: { email } })
 
     if (userExist && userExist.emailConfirmed) {
@@ -14,7 +14,7 @@ const registerUserService = async (fullname, password, email) => {
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    const user = await User.create({ fullname, password: hashedPassword, email: email });
+    const user = await User.create({ fullname, password: hashedPassword, email: email, birth: birth });
     const token = generateTokenService(user.id, user.role);
     await user.update({ verificationToken: token });
 
@@ -34,7 +34,9 @@ const loginUserService = async (email, password) =>{
     }
 
     const token = generateTokenService(user.id, user.role);
-    user.password = ""
+    user.password = "";
+    user.verificationToken = "";
+
     return { user, token };
 };
 

@@ -31,6 +31,13 @@ const User = sequelize.define('User', {
         type: DataTypes.STRING(500),
         defaultValue: false
     },
+    birth:{
+        type: DataTypes.DATEONLY,
+        allowNull: false,
+        validate:{
+            isDate: true
+        }
+    },
 }, {
     tableName: 'users',
     timestamps: false,
