@@ -45,6 +45,22 @@ const removeExpiredUsers = async () => {
     }
 };
 
+/**
+ * Lida com a validação e processamento do arquivo recebido.
+ * @param {Object} file - Arquivo enviado pelo cliente.
+ * @returns {string} Caminho onde o arquivo foi salvo.
+ * @throws {Error} Se nenhum arquivo foi enviado.
+ */
+const processUploadedFile = (file) => {
+    if (!file) {
+        throw new Error('Nenhum arquivo enviado.');
+    }
+    return file.path; // Retorna o caminho do arquivo salvo
+};
+
+
+
 module.exports = {
     removeExpiredUsers,
+    processUploadedFile,
 };

@@ -1,11 +1,12 @@
 const { registerUserService, loginUserService, forgotPasswordService, changePasswordService } = require('../services/userService');
 const User = require('../models/User');
+const { processUploadedFile } = require('../services/handlerService');
 
 const registerUserController = async (req, res) => {
-    const { fullname, password, email, birth } = req.body;
+    const { fullname, password, email, birth, imgProfile } = req.body;
 
     try {
-        const newUser = await registerUserService(fullname, password, email, birth);
+        const newUser = await registerUserService(fullname, password, email, birth, imgProfile);
         return res.status(200).json({message: 'user registered successfully, please confirm your email', user: newUser});
     } catch (err) {
         return res.status(401).json({error: err.message});
@@ -66,9 +67,25 @@ const changePasswordController = async (req, res) => {
     };
 };
 
+/**
+ * Controla o fluxo de upload de arquivos.
+ * @param {Object} req - Objeto da requisição.
+ * @param {Object} res - Objeto da resposta.
+ */
+const uploadFileController = (req, res) => {
+    try {
+        const filePath = processUploadedFile(req.file);
+        console.log(filePath);
+        res.status(200).json({ message: 'Foto enviada com sucesso!', filePath });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 module.exports = {
     registerUserController,
     loginController,
     forgotPasswordController,
     changePasswordController,
+    uploadFileController
 };
