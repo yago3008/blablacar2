@@ -23,10 +23,10 @@ const updateUserController = async (req, res) => {
 
 const rateUserController = async (req, res) => {
     const { id } = req.user;
-    const { stars, evaluatee } = req.body;
+    const { stars, evaluatee, comment } = req.body;
 
     try{
-        const rateAvg = await rateUserService(id, stars, evaluatee);
+        const rateAvg = await rateUserService(id, stars, evaluatee, comment);
         return res.status(200).json({ message: 'User rated successfully', average: rateAvg });
     } catch(err){
         return res.status(401).json({ error: err.message });

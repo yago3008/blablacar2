@@ -1,4 +1,4 @@
-const { getUsersService } = require('../services/adminService');
+const { getUsersService, getRatesService } = require('../services/adminService');
 
 const getUsersController = async (req, res) => {
     try {
@@ -9,6 +9,16 @@ const getUsersController = async (req, res) => {
     };
 };
 
+const getRatesController = async (req, res) => {
+    try {
+        const rates = await getRatesService();
+        return res.status(200).json(rates);
+    } catch (err) {
+        return res.status(401).json({ error: err.message });
+    };
+};
+
 module.exports = {
     getUsersController,
+    getRatesController,
 };

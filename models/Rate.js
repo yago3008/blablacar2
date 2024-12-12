@@ -11,13 +11,17 @@ const Rate = sequelize.define('Rate', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
+    evaluateeID: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
     stars: {
         type: DataTypes.FLOAT(3),
         allowNull: false
     },
-    evaluateeID: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
+    comment: {
+        type: DataTypes.TEXT,
+        allowNull: true,
     },
 }, {
     tableName: 'rate',
