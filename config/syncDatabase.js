@@ -25,7 +25,9 @@ const createAdmin = async () => {
                 emailConfirmed: true,
                 email: 'admin@blablacar2.com',
                 verificationToken: generateTokenService(1, 'admin'),
-                birth: "1985-05-15"
+                birth: "1985-05-15",
+                driverLicense: "3227098581",
+                rateNote: "5.0"
             });
         } catch (err) {
             console.error('Error creating admin user:', err);

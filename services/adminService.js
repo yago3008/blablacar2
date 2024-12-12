@@ -1,8 +1,8 @@
 const User = require('../models/User');
 
 const getUsersService = async () => {
-    users = await User.findAll({
-        attributes: ['id', 'fullname', 'email', 'role', 'birth'], 
+    const users = await User.findAll({
+        attributes: ['id', 'fullname', 'email', 'role', 'birth', 'driverLicense'], 
     });
     if (!users) throw new Error('No users found');
 

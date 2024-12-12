@@ -38,6 +38,22 @@ const User = sequelize.define('User', {
             isDate: true
         }
     },
+    driverLicense: {
+        type: DataTypes.STRING(30),
+        allowNull: true
+    },
+    rateNote: {
+        type: DataTypes.FLOAT(3, 2),
+        defaultValue: 5.00,
+        validate: {
+            min: 0.00,
+            max: 5.00,
+        },
+    },
+    rateQty: {
+        type: DataTypes.INTEGER,
+        defaultValue: 1,
+    },
 }, {
     tableName: 'users',
     timestamps: false,

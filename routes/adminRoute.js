@@ -3,7 +3,6 @@ const router = express.Router();
 const { getUsersController } = require('../controllers/adminController');
 const { isAdmin } = require('../middleware/auth');
 
-
 router
     .get('/get-users', isAdmin, getUsersController);
 
