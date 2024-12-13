@@ -1,4 +1,4 @@
-const { registerUserService, loginUserService, forgotPasswordService, changePasswordService } = require('../services/userService');
+const { registerUserService, loginUserService, forgotPasswordService, changePasswordService, registerCarService } = require('../services/userService');
 const User = require('../models/User');
 const { processUploadedFile } = require('../services/handlerService');
 
@@ -77,15 +77,16 @@ const uploadFileController = (req, res) => {
         const filePath = processUploadedFile(req.file);
         console.log(filePath);
         res.status(200).json({ message: 'Foto enviada com sucesso!', filePath });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 };
+
 
 module.exports = {
     registerUserController,
     loginController,
     forgotPasswordController,
     changePasswordController,
-    uploadFileController
+    uploadFileController,
 };
