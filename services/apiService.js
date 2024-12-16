@@ -57,9 +57,14 @@ const registerCarService = async (id, model, brand, year, color, licensePlate) =
     return registeredCar;
 };
 
+const offerTravelService = async (userID, origin, destination, distance, duration, carID, price, time, seats) => {
+
+};
+
 module.exports = {
     getUserService,
     updateUserService,
     rateUserService,
-    registerCarService
+    registerCarService,
+    offerTravelService
 };

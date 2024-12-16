@@ -1,4 +1,4 @@
-const { getUserService, updateUserService, rateUserService, registerCarService } = require('../services/apiService');
+const { getUserService, updateUserService, rateUserService, registerCarService, offerTravelService } = require('../services/apiService');
 
 const getUserController = async (req, res) => {
     const { id } = req.user;
@@ -36,7 +36,7 @@ const rateUserController = async (req, res) => {
 const registerCarController = async (req, res) => {
     const { id } = req.user;
     const { model, brand, year, color, licensePlate } = req.body;
-    
+
     try {
         const car = await registerCarService(id, model, brand, year, color, licensePlate);
         return res.status(200).json({ message: 'Car registered successfully', car: car });
@@ -45,9 +45,23 @@ const registerCarController = async (req, res) => {
     };
 };
 
+const offerTravelController = async (req, res) => {
+    const { id } = req.user;
+    const { origin, destination, distance, duration, carID, price, time, seats} = req.body;
+
+    try {
+        const travel = await offerTravelService(id, origin, destination, distance, duration, carID, price, time, seats);
+        return res.status(200).json({ message: 'Travel registered successfully', travel: travel });
+    } catch (err) {
+        return res.status(400).json({ error: err.message });
+    };
+
+};
+
 module.exports = {
     getUserController,
     updateUserController,
     rateUserController,
-    registerCarController
+    registerCarController,
+    offerTravelController
 };
