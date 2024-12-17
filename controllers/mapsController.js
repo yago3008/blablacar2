@@ -1,11 +1,11 @@
-const { mapsService, calculatePriceService } = require('../services/mapsService');
+const { getDurationAndDistanceService, calculatePriceService } = require('../services/mapsService');
 
 const mapsController = async (req, res) => {
     try {
         const origin = encodeURIComponent(req.query.origin);
         const destination = encodeURIComponent(req.query.destination);
 
-        data = await mapsService(origin, destination)
+        data = await getDurationAndDistanceService(origin, destination)
         return res.status(200).json(data);
     } catch (err) {
         return res.status(401).json({ error: err.message });

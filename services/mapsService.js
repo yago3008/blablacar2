@@ -1,5 +1,5 @@
 
-const mapsService = async (origin, destination) => {
+const getDurationAndDistanceService = async (origin, destination) => {
     const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${origin}&destination=${destination}&key=${process.env.GOOGLE_MAPS_SERVICE_API_KEY}`;
     const response = await fetch(url);
     const data = await response.json();
@@ -22,7 +22,6 @@ const calculatePriceService = async (rawDistance, rawDuration) => {
     const hoursParts = rawDuration.split(" ");
     let hours = 0;
     let minutes = 0;
-
     if (hoursParts[1] === "hours") {
         hours = parseInt(hoursParts[0]);
         if (hoursParts[2] === "mins") {
@@ -47,6 +46,6 @@ const calculatePriceService = async (rawDistance, rawDuration) => {
 };
 
 module.exports = {
-    mapsService,
+    getDurationAndDistanceService,
     calculatePriceService
 }

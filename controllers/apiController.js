@@ -47,10 +47,12 @@ const registerCarController = async (req, res) => {
 
 const offerTravelController = async (req, res) => {
     const { id } = req.user;
-    const { origin, destination, distance, duration, carID, price, time, seats} = req.body;
+    const origin = encodeURIComponent(req.body.origin);
+    const destination = encodeURIComponent(req.body.destination);
+    const { carID, price, time, seats} = req.body;
 
     try {
-        const travel = await offerTravelService(id, origin, destination, distance, duration, carID, price, time, seats);
+        const travel = await offerTravelService(id, origin, destination, carID, price, time, seats);
         return res.status(200).json({ message: 'Travel registered successfully', travel: travel });
     } catch (err) {
         return res.status(400).json({ error: err.message });

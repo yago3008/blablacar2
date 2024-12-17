@@ -1,6 +1,8 @@
 const User = require('../models/User');
 const Rate = require('../models/Rate');
 const Car = require('../models/Car');
+const Trip = require('../models/Trip');
+const { getDurationAndDistanceService, calculatePriceService } = require('./mapsService');
 
 const getUserService = async (id) => {
     const user = await User.findByPk(id, {
@@ -57,8 +59,36 @@ const registerCarService = async (id, model, brand, year, color, licensePlate) =
     return registeredCar;
 };
 
-const offerTravelService = async (userID, origin, destination, distance, duration, carID, price, time, seats) => {
+const offerTravelService = async (userID, origin, destination, carID, price, time, seats) => {
+    const user = await User.findByPk(userID);
+    const car = await Car.findByPk(carID);
+    const { duration, distance } = await getDurationAndDistanceService(origin, destination);
+    const suggestedPrice = await calculatePriceService(distance, duration)
+    
+    if (!user) throw new Error('User not found');
+    if (!car) throw new Error('Car not found');
+    if (!duration || !distance) throw new Error('Duration or distance error');
+    if (!origin || !destination || !carID || !price || !time || !seats) throw new Error('Information required missing');
 
+    if (price > (suggestedPrice * 1.3))  throw new Error(`max price is ${suggestedPrice * 1.3}`);
+    if (price < (suggestedPrice * 0.7))  throw new Error(`max price is ${suggestedPrice * 0.7}`);
+
+    const decodedOrigin = decodeURIComponent(origin);
+    const decodedDestination = decodeURIComponent(destination);
+    
+    const trip = await Trip.create({
+        origin: decodedOrigin, 
+        destination: decodedDestination,
+        distance,
+        duration, 
+        price, 
+        time, 
+        seats,
+        carID,
+        userID
+    });
+
+    return trip;
 };
 
 module.exports = {

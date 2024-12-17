@@ -38,15 +38,11 @@ const Trip = sequelize.define('Trip', {
         allowNull: false,
     },
     distance: {
-        type: DataTypes.FLOAT,
+        type: DataTypes.STRING(255),
         allowNull: false,
-        validate: {
-            isFloat: true,
-            min: 0,
-        },
     },
     duration: {
-        type: DataTypes.TIME,
+        type: DataTypes.STRING(255),
         allowNull: false,
     },
     price: {
@@ -57,11 +53,8 @@ const Trip = sequelize.define('Trip', {
         },
     },
     time: {
-        type: DataTypes.DATE,
+        type: DataTypes.STRING(255),
         allowNull: false,
-        validate: {
-            isDate: true,
-        },
     },
     seats: {
         type: DataTypes.INTEGER,
