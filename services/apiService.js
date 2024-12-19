@@ -2,6 +2,7 @@ const User = require('../models/User');
 const Rate = require('../models/Rate');
 const Car = require('../models/Car');
 const Trip = require('../models/Trip');
+const { Op } = require('sequelize');
 const { getDurationAndDistanceService, calculatePriceService } = require('./mapsService');
 
 const getUserService = async (id) => {
@@ -69,9 +70,10 @@ const offerTravelService = async (userID, origin, destination, carID, price, tim
     if (!car) throw new Error('Car not found');
     if (!duration || !distance) throw new Error('Duration or distance error');
     if (!origin || !destination || !carID || !price || !time || !seats) throw new Error('Information required missing');
+    if (seats < 0 || seats > 4) throw new Error('Invalid seats quantity');
 
-    if (price > (suggestedPrice * 1.3))  throw new Error(`max price is ${suggestedPrice * 1.3}`);
-    if (price < (suggestedPrice * 0.7))  throw new Error(`max price is ${suggestedPrice * 0.7}`);
+    if (price > (suggestedPrice * 1.3))  throw new Error(`max price is ${suggestedPrice * 1.3}`); //+30%
+    if (price < (suggestedPrice * 0.7))  throw new Error(`max price is ${suggestedPrice * 0.7}`); //-30%
 
     const decodedOrigin = decodeURIComponent(origin);
     const decodedDestination = decodeURIComponent(destination);
@@ -91,10 +93,37 @@ const offerTravelService = async (userID, origin, destination, carID, price, tim
     return trip;
 };
 
+const getTravelService = async (orderBy, origin, destination) => {
+    const validOrderFields = ['origin', 'destination', 'price', 'seats'];
+
+    if (!origin && !destination) throw new Error('Origin and Destination must be specified');
+    if (!validOrderFields.includes(orderBy)) {
+        throw new Error(`Invalid order field: ${orderBy}. Valid fields are: ${validOrderFields.join(', ')}`);
+    }
+
+    const travels = await Trip.findAll({
+        where: {
+            [Op.or]: [
+                { origin: { [Op.like]: `%${origin}%` } },
+                { destination: { [Op.like]: `%${destination}%` } }
+            ]
+        },
+        order: [
+            [orderBy, 'ASC']
+        ]
+    });
+    
+    if (!travels.length) throw new Error('No travels found');
+
+    return travels;
+};
+
+
 module.exports = {
     getUserService,
     updateUserService,
     rateUserService,
     registerCarService,
-    offerTravelService
+    offerTravelService,
+    getTravelService
 };
