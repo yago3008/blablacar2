@@ -22,12 +22,12 @@ const calculatePriceService = async (rawDistance, rawDuration) => {
     const hoursParts = rawDuration.split(" ");
     let hours = 0;
     let minutes = 0;
-    if (hoursParts[1] === "hours") {
+    if (hoursParts[1] === "hours" || hoursParts[1] === "hour") {
         hours = parseInt(hoursParts[0]);
-        if (hoursParts[2] === "mins") {
+        if (hoursParts[2] === "mins" || hoursParts[2] === "min") {
             minutes = parseInt(hoursParts[2]);
         }
-    } else if (hoursParts[1] === "mins") {
+    } else if (hoursParts[1] === "mins" || hoursParts[1] === "min") {
         minutes = parseInt(hoursParts[0]);
     } else {
         throw new Error("Bad format for duration");

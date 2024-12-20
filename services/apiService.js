@@ -68,6 +68,7 @@ const offerTravelService = async (userID, origin, destination, carID, price, tim
     
     if (!user) throw new Error('User not found');
     if (!car) throw new Error('Car not found');
+    if (car.userID != user.id) throw new Error('Invalid Car ID');
     if (!duration || !distance) throw new Error('Duration or distance error');
     if (!origin || !destination || !carID || !price || !time || !seats) throw new Error('Information required missing');
     if (seats < 0 || seats > 4) throw new Error('Invalid seats quantity');
